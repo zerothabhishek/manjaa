@@ -17,13 +17,13 @@
     <td><%= post.content %></td>
     <td><%= post.permalink %></td>
     <td><%= post.tags %></td>
-    <td><%= link_to 'Show', post %></td>
-    <td><%= link_to 'Edit', edit_post_path(post) %></td>
-    <td><%= link_to 'Destroy', post, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Show', site_post_path(@site, post) %></td>
+    <td><%= link_to 'Edit', edit_site_post_path(@site, post) %></td>
+    <td><%= link_to 'Destroy', site_post_path(@site, post), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Post', new_post_path %>
+<%= link_to 'New Post', new_site_post_path(@site) %>

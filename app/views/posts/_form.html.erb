@@ -1,4 +1,5 @@
-<%= form_for(@post) do |f| %>
+<% url = @post.new_record? ? site_posts_path(@site) : site_post_url(@site, @post) %>
+<%= form_for @post, :url=>url do |f| %>
   <% if @post.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>

@@ -1,8 +1,11 @@
 class PostsController < ApplicationController
-  # GET /posts
-  # GET /posts.xml
+  
+  before_filter :authenticate_user!
+  # GET /site/:site_id/posts
+  # GET /site/:site_id/posts.xml
   def index
-    @posts = Post.all
+    @site = current_user.sites.find(params[:site_id])
+    @posts = @site.posts.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -10,10 +13,11 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1
-  # GET /posts/1.xml
+  # GET /sites/:site_id/posts/:id
+  # GET /sites/:site_id/posts/:id.xml
   def show
-    @post = Post.find(params[:id])
+    @site = current_user.sites.find(params[:site_id])
+    @post = @site.posts.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -21,10 +25,11 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/new
-  # GET /posts/new.xml
+  # GET /sites/:site_id/posts/new
+  # GET /sites/:site_id/posts/new.xml
   def new
-    @post = Post.new
+    @site = current_user.sites.find(params[:site_id])
+    @post = @site.posts.build
 
     respond_to do |format|
       format.html # new.html.erb
@@ -32,19 +37,21 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1/edit
+  # GET /sites/:site_id/posts/:id/edit
   def edit
-    @post = Post.find(params[:id])
+    @site = current_user.sites.find(params[:site_id])
+    @post = @site.posts.find(params[:id])
   end
 
-  # POST /posts
-  # POST /posts.xml
+  # POST /sites/:site_id/posts
+  # POST /sites/:site_id/posts.xml
   def create
-    @post = Post.new(params[:post])
+    @site = current_user.sites.find(params[:site_id])
+    @post = @site.posts.build(params[:post])
 
     respond_to do |format|
       if @post.save
-        format.html { redirect_to(@post, :notice => 'Post was successfully created.') }
+        format.html { redirect_to(site_post_path(@site, @post), :notice => 'Post was successfully created.') }
         format.xml  { render :xml => @post, :status => :created, :location => @post }
       else
         format.html { render :action => "new" }
@@ -53,14 +60,15 @@ class PostsController < ApplicationController
     end
   end
 
-  # PUT /posts/1
-  # PUT /posts/1.xml
+  # PUT /sites/:site_id/posts/:id
+  # PUT /sites/:site_id/posts/:id.xml
   def update
-    @post = Post.find(params[:id])
+    @site = current_user.sites.find(params[:site_id])
+    @post = @site.posts.find(params[:id])
 
     respond_to do |format|
       if @post.update_attributes(params[:post])
-        format.html { redirect_to(@post, :notice => 'Post was successfully updated.') }
+        format.html { redirect_to(site_post_path(@site, @post), :notice => 'Post was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -69,14 +77,15 @@ class PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
-  # DELETE /posts/1.xml
+  # DELETE /sites/:site_id/posts/:id
+  # DELETE /sites/:site_id/posts/:id.xml
   def destroy
-    @post = Post.find(params[:id])
+    @site = current_user.sites.find(params[:site_id])
+    @post = @site.posts.find(params[:id])
     @post.destroy
 
     respond_to do |format|
-      format.html { redirect_to(posts_url) }
+      format.html { redirect_to(site_posts_url(@site)) }
       format.xml  { head :ok }
     end
   end

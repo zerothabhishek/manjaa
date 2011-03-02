@@ -13,14 +13,15 @@ class Post < ActiveRecord::Base
     
     # determine filename
     date_str = created_at.strftime("%Y-%m-%d")
-    title_str = title.gsub(/\s/,/-/)
+    title_str = title.gsub(/\s/,'-')
     filename = "#{date_str}-#{title_str}.md"
     
     # create YFM
     # => currently expecting YFM within content
     
     # save
-    File.open(filename,"w"){ |f| f.write(content) }
+    path = File.join(File.expand_path(site.root), "_posts", filename)
+    File.open(path,"w"){ |f| f.write(content) }
   end
   
   def update_j

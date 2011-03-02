@@ -1,8 +1,11 @@
 class SitesController < ApplicationController
+  
+  before_filter :authenticate_user!
+    
   # GET /sites
   # GET /sites.xml
   def index
-    @sites = Site.all
+    @sites = current_user.sites.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,7 +16,7 @@ class SitesController < ApplicationController
   # GET /sites/1
   # GET /sites/1.xml
   def show
-    @site = Site.find(params[:id])
+    @site = current_user.sites.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -24,7 +27,7 @@ class SitesController < ApplicationController
   # GET /sites/new
   # GET /sites/new.xml
   def new
-    @site = Site.new
+    @site = current_user.sites.build
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,13 +37,13 @@ class SitesController < ApplicationController
 
   # GET /sites/1/edit
   def edit
-    @site = Site.find(params[:id])
+    @site = current_user.sites.find(params[:id])
   end
 
   # POST /sites
   # POST /sites.xml
   def create
-    @site = Site.new(params[:site])
+    @site = current_user.sites.build(params[:site])
     respond_to do |format|
       if @site.save
         format.html { redirect_to(@site, :notice => 'Site was successfully created.') }
@@ -55,7 +58,7 @@ class SitesController < ApplicationController
   # PUT /sites/1
   # PUT /sites/1.xml
   def update
-    @site = Site.find(params[:id])
+    @site = current_user.sites.find(params[:id])
 
     respond_to do |format|
       if @site.update_attributes(params[:site])
@@ -71,7 +74,7 @@ class SitesController < ApplicationController
   # DELETE /sites/1
   # DELETE /sites/1.xml
   def destroy
-    @site = Site.find(params[:id])
+    @site = current_user.sites.find(params[:id])
     @site.destroy
 
     respond_to do |format|
