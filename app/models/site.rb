@@ -32,4 +32,13 @@ class Site < ActiveRecord::Base
     File.read "#{Rails.root}/public/liquids/default.html"
   end
   
+  # Runs the jekyll command to generate the site
+  def j_generate
+    source_path = "#{root}"
+    destination_path = "#{root}/_site"
+    command = "jekyll #{source_path} #{destination_path}"
+    command_output = `#{command}`
+    logger.info "======> #{command_output}"
+  end
+  
 end

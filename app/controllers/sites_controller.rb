@@ -82,4 +82,12 @@ class SitesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  # GET /sites/1/generate
+  def generate
+    @site = current_user.sites.find(params[:id])
+    @site.j_generate
+    redirect_to site_path(@site)
+  end
+  
 end
