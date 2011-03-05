@@ -1,5 +1,6 @@
 class Site < ActiveRecord::Base
   has_many :posts
+  #has_one :option_set
   
   after_create :j_create
   after_update :j_update
@@ -20,6 +21,20 @@ class Site < ActiveRecord::Base
     
     # Put default content in default layout
     File.open("#{root}/_layouts/default.html", "w"){ |f| f.write(default_layout_content) }
+    
+    # git initialization and settings for _posts
+    setup_git
+  end
+  
+  def setup_git
+    # initialize a git repo in the _posts folder
+    init_command = "cd #{root}/_posts; git init ."
+    `#{init_command}`    
+    
+    # set the remote origin
+    origin = "git@github.com:#{self.user.github_username}/#{self.name}.git"
+    set_origin_command = "git remote add origin #{origin}"
+    `#{set_origin_command}`    
   end
   
   def j_update
@@ -34,11 +49,23 @@ class Site < ActiveRecord::Base
   
   # Runs the jekyll command to generate the site
   def j_generate
-    source_path = "#{root}"
-    destination_path = "#{root}/_site"
-    command = "jekyll #{source_path} #{destination_path}"
-    command_output = `#{command}`
-    logger.info "======> #{command_output}"
+    options = Jekyll::DEFAULTS
+    options['source'] = "#{root}"
+    options['destination'] = "#{root}/_site"
+    j_site = Jekyll::Site.new(options)
+    j_site.process
+  end
+  
+  def j_push
+    add_command = "git add ."
+    commit_msg = "commit dated #{Time.now}"
+    commit_command = "git commit -m #{commit_msg}"
+    push_command = "git push origin master"
+    
+    FileUtils.cd "#{root}/_posts"
+    `#{add_command}`
+    `#{commit_command}`
+    `#{push_command}`
   end
   
 end

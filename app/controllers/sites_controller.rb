@@ -90,4 +90,13 @@ class SitesController < ApplicationController
     redirect_to site_path(@site)
   end
   
+  # GET /sites/:id/push
+  #
+  # commit and push the source for the site (_posts) to github
+  def push
+    @site = current_user.sites.find(params[:id])
+    @site.j_push
+    redirect_to site_path(@site)    
+  end
+  
 end

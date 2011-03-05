@@ -4,6 +4,7 @@ Manjaa::Application.routes.draw do
   resources :sites do
     resources :posts
     get 'generate', :on => :member
+    get 'push', :on => :member
   end
 
   # The priority is based upon order of creation:
