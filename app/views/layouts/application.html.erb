@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manjaa</title>
+  <%= stylesheet_link_tag :all %>
+  <%= javascript_include_tag :defaults %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+<div>	
+<% if logged_in? %>
+	logged in as <%= current_user.name %>
+	<%= link_to "logout", logout_path %>
+<% else %>
+	<%= link_to "login", login_path %>
+<% end %>
+</div>
+
+<%= yield %>
+
+</body>
+</html>

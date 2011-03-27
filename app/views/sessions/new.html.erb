@@ -1,0 +1,11 @@
+<%= form_for :user, :url => login_path do |f| %>
+	<p>
+	username : <%= f.text_field :name %>
+	</p>
+	<p>
+	password : <%= f.password_field :password %>
+	</p>
+	<p>
+	<%= f.submit "login" %>
+	</p>	
+<% end %>	

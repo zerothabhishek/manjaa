@@ -1,0 +1,17 @@
+<%= form_for(@post) do |f| %>
+	<p>
+		title: <br/>
+		<%= f.text_field :title %> 
+	</p>
+	<p>	
+		content: <br/>
+		<%= f.text_area :content %>
+	</p>
+	<p>
+		permalink <br/>
+		<%= f.text_field :permalink %>
+	</p>
+	<p>
+		<%= f.submit "create" %>	
+	</p>	
+<% end %>
