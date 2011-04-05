@@ -1,12 +1,15 @@
 Manjaa::Application.routes.draw do
   
   resources :posts
+  resources :users
   
-  match '/login' => 'sessions#new', :as => :login, :via => :get
-  match '/login' => 'sessions#create', :as => :login, :via => :post
-  match '/logout' => 'sessions#destroy', :as => :logout
-
+  match '/login'    => 'sessions#new',      :as => :login,    :via => :get
+  match '/login'    => 'sessions#create',   :as => :login,    :via => :post
+  match '/logout'   => 'sessions#destroy',  :as => :logout
+  
   match '/callback/github' => "home#github_callback", :as => :github_callback
+  match '/dashboard' => "home#dashboard", :as => :dashboard
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

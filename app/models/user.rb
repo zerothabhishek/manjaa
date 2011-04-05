@@ -3,4 +3,9 @@ class User < ActiveRecord::Base
   has_secure_password
   
   has_many :posts
+  
+  def setup_jekyll
+    Stalker.enqueue("jekyll.init", :user_id => self.id)
+  end
+  
 end

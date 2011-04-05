@@ -7,8 +7,8 @@ class SessionsController < ApplicationController
   # POST /sessions
   def create
     user = User.find_by_name(params[:user][:name]).try(:authenticate, params[:user][:password]) 
-    session[:current_user_id] = user.id
-    redirect_to :root
+    set_session user
+    redirect_to dashboard_path
   end
   
   # GET /logout

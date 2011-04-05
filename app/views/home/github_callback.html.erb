@@ -1,7 +1,9 @@
-<%= form_tag("https://github.com/login/oauth/access_token") do %>
-	<%= hidden_field_tag :client_id, '40b43a12613944cc85aa'%>
-	<%= hidden_field_tag :client_secret, '6b03149d65012d21b08d55b14d09ecb30e2a1fe5' %>
-	<%= @code %>
-	<%= hidden_field_tag :code, @code %>
-	<%= submit_tag "go" %>
-<% end %>
+<%#= form_tag("https://github.com/login/oauth/access_token") do %>
+	<%#= hidden_field_tag :client_id, '40b43a12613944cc85aa'%>
+	<%#= hidden_field_tag :client_secret, '6b03149d65012d21b08d55b14d09ecb30e2a1fe5' %>
+	<%#= @code %>
+	<%#= hidden_field_tag :code, @code %>
+	<%#= submit_tag "go" %>
+<%# end %>
+Access token= <%= @access_token.token %> <br/>
+User= <%= @user.inspect %>

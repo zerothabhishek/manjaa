@@ -32,4 +32,7 @@ Manjaa::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+  
+  # Location of the user sites
+  config.sites_path = "/Users/abhishekyadav/code/manjaa-app/sites"
 end
