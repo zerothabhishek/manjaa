@@ -45,4 +45,5 @@ ActiveRecord::Schema.define(:version => 20110405142706) do
     t.string "password_digest"
   end
 
+
 end

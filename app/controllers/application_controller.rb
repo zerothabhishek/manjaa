@@ -20,5 +20,4 @@ class ApplicationController < ActionController::Base
   def set_session user
     session[:current_user_id] = user.id
   end
-  
 end

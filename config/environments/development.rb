@@ -22,7 +22,6 @@ Manjaa::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
-  
   # Location of the user sites
   config.sites_path = "/Users/abhishekyadav/code/manjaa-app/sites"
 end
