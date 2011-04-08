@@ -10,12 +10,31 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110327034442) do
+ActiveRecord::Schema.define(:version => 20110405142706) do
+
+  create_table "github_infos", :force => true do |t|
+    t.string   "github_username"
+    t.string   "access_token"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "posts", :force => true do |t|
     t.string   "title"
     t.text     "content"
     t.string   "permalink"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "setup_statuses", :force => true do |t|
+    t.boolean  "site_initialized",           :default => false
+    t.boolean  "github_username_identified", :default => false
+    t.boolean  "site_repo_created",          :default => false
+    t.boolean  "public_key_uploaded",        :default => false
+    t.boolean  "site_remote_set",            :default => false
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

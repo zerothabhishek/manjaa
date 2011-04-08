@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include GithubProcessor
+  helper_method :github_auth_url
   
   def current_user
     logged_in? ? User.find(session[:current_user_id]) : nil

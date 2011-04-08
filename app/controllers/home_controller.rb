@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   
-  before_filter :authenticate!, :only => :dashboard
+  before_filter :authenticate!, :only => [:dashboard, :github_callback]
   
   def index
   end
@@ -10,9 +10,8 @@ class HomeController < ApplicationController
   
   def github_callback
     @code = params[:code]
-    @access_token = new_client.web_server.get_access_token(@code)
-    user_json = @access_token.get('/api/v2/json/user/show')
-    @user = JSON.parse user_json
+    current_user.setup_github(@code)
+    redirect_to dashboard_path
   end
 
 end

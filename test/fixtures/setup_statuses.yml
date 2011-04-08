@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  site_initialized: 
+  github_username_identified: 
+  site_repo_created: 
+  public_key_uploaded: 
+  site_remote_set: 
+
+two:
+  site_initialized: 
+  github_username_identified: 
+  site_repo_created: 
+  public_key_uploaded: 
+  site_remote_set: 
