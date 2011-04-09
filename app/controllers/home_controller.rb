@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   
-  before_filter :authenticate!, :only => [:dashboard, :github_callback]
+  before_filter :authenticate!, :only => [:dashboard, :github_callback, :setup]
   
   def index
   end
@@ -9,8 +9,10 @@ class HomeController < ApplicationController
   end
   
   def github_callback
-    @code = params[:code]
-    current_user.setup_github(@code)
+    code = params[:code]
+    debugger
+    current_user.github_info.update_attribute(:access_code, code)
+    current_user.do_setup(code)
     redirect_to dashboard_path
   end
 

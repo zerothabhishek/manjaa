@@ -6,7 +6,7 @@ gem 'rails', '3.0.5.rc1'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'bcrypt-ruby'
-gem 'oauth2'
+gem 'oauth2', '0.1.1'
 gem 'json'
 
 

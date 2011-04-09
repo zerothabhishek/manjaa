@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(:version => 20110405142706) do
   create_table "github_infos", :force => true do |t|
     t.string   "github_username"
     t.string   "access_token"
+    t.string   "access_code"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -44,6 +45,5 @@ ActiveRecord::Schema.define(:version => 20110405142706) do
     t.string "name"
     t.string "password_digest"
   end
-
 
 end

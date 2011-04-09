@@ -1,9 +1,23 @@
 <p>
 	hello. 
 </p>	
-<p>
-	Setting up:
-	<%= link_to "authenticate with github", github_auth_url %>
-	<br/><br/>
-	its <%= github_auth_url %>
-</p>
+
+<% if current_user.setup_incomplete? %>
+	
+	<% if current_user.got_code? && current_user.got_access? %>
+		Setup in progress <br/>
+	<% else %>
+		<%= link_to "Allow github access", github_auth_url %>
+	<% end %>
+	
+<% elsif current_user.setup_almost_complete? %>	
+	
+	Please <%= link_to "create", github_new_repo_url %> 
+	a repo called <b><%= "#{current_user.remote_repo_name}" %> </b>
+	in your github account
+
+<% elsif current_user.setup_complete? %>	
+	
+	Setup is complete. Start blogging!
+	
+<% end %>	
