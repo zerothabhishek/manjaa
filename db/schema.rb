@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110405142706) do
+ActiveRecord::Schema.define(:version => 20110411105640) do
 
   create_table "github_infos", :force => true do |t|
     t.string   "github_username"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20110405142706) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "publish_status", :default => ""
   end
 
   create_table "setup_statuses", :force => true do |t|

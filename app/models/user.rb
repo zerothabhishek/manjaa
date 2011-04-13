@@ -79,6 +79,10 @@ class User < ActiveRecord::Base
     Stalker.enqueue("github.get_user_info", :user_id => self.id)
   end
   
+  def create_site_repo
+    Stalker.enqueue("github.create_repo", :user_id => self.id)
+  end
+  
   def upload_public_key
     Stalker.enqueue("github.upload_public_key", :user_id => self.id)
   end

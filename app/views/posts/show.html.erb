@@ -11,3 +11,12 @@
 	<%= @post.permalink %>	
 </p>	
 
+<p>
+	publishing status: <%= @post.publish_status %>
+	<%= link_to "finish publish", publish_post_path unless @post.published? %>
+</p>
+
+<hr>
+
+<%= link_to "edit", edit_post_path %> |
+<%= link_to "index", posts_path %>

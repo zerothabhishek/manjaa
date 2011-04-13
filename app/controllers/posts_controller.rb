@@ -34,6 +34,12 @@ class PostsController < ApplicationController
     end
   end
   
+  def publish
+    @post = current_user.posts.find params[:id]
+    @post.do_publish
+    redirect_to post_path(@post)
+  end
+  
   def destroy
     @post = current_user.posts.find params[:id]
     @post.destroy

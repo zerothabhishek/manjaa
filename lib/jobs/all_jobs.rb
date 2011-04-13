@@ -75,17 +75,20 @@ job "github.get_user_info" do |args|
   end  
 end
 
+# This actually does NOT create the repo.
+# It only checks of the repo exists, and if it does, sets the corresponding status flags
+# Github api has problems creating repos via oAuth2, hence the user must be asked to create it manually.
 job "github.create_repo" do |args|
   begin
     user = User.find args["user_id"].to_i
     access_token = OAuth2::AccessToken.new(new_client, user.github_info.access_token)
     
-    repo_name = "#{user.github_info.github_username}.github.com"
-    home_page = "http://#{repo_name}"
-    params = {:name => repo_name, :desc => "some desc", :homepage => home_page, :public => 1}
-    access_token.post('/api/v2/json/repos/create', params)
-    
-    user.site_repo_created!
+    github_username = user.github_info.github_username
+    repo_data = JSON.parse(access_token.get("/api/v2/json/repos/show/#{github_username}"))
+    repo_exists = repo_data["repositories"].any? { |repo| repo["name"] == user.remote_repo_name }
+    p "repo exists" if repo_exists
+        
+    user.site_repo_created!   if repo_exists
   rescue OAuth2::AccessDenied
     user.lost_github_access!
   end
@@ -104,5 +107,36 @@ job "github.upload_public_key" do |args|
     user.public_key_uploaded!    
   rescue OAuth2::AccessDenied
     user.lost_github_access!
+  end
+end
+
+
+job "post.preprocess" do |args|
+  begin
+    post = Post.find args["post_id"].to_i
+    post.preprocess_it
+  rescue => e
+    p e.message
+    p e.backtrace
+  end  
+end
+
+job "post.jkyll" do |args|
+  begin
+    post = Post.find args["post_id"].to_i
+    post.jkyll_it
+  rescue => e
+    p e.message
+    p e.backtrace
+  end
+end
+
+job "post.push" do |args|
+  begin
+    post = Post.find args["post_id"].to_i
+    post.push_it
+  rescue => e
+    p e.message
+    p e.backtrace
   end
 end

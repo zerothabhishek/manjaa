@@ -1,6 +1,8 @@
 Manjaa::Application.routes.draw do
   
-  resources :posts
+  resources :posts do
+    get 'publish', :on => :member
+  end
   resources :users
   
   match '/login'    => 'sessions#new',      :as => :login,    :via => :get

@@ -2,13 +2,9 @@
 	hello. 
 </p>	
 
-<% if current_user.setup_incomplete? %>
-	
-	<% if current_user.got_code? && current_user.got_access? %>
-		Setup in progress <br/>
-	<% else %>
-		<%= link_to "Allow github access", github_auth_url %>
-	<% end %>
+<% if current_user.setup_complete? %>
+
+	Setup is complete. <%= link_to "Start blogging!", new_post_path %>	
 	
 <% elsif current_user.setup_almost_complete? %>	
 	
@@ -16,8 +12,12 @@
 	a repo called <b><%= "#{current_user.remote_repo_name}" %> </b>
 	in your github account
 
-<% elsif current_user.setup_complete? %>	
+<% elsif current_user.setup_incomplete? %>	
 	
-	Setup is complete. Start blogging!
+	<% if current_user.got_code? && current_user.got_access? %>
+		Setup in progress <br/>
+	<% else %>
+		<%= link_to "Allow github access", github_auth_url %>
+	<% end %>
 	
 <% end %>	
