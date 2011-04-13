@@ -8,7 +8,7 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'bcrypt-ruby'
 gem 'oauth2', '0.1.1'
 gem 'json'
-
+gem 'jekyll', '0.10.0'
 
 gem 'stalker'			# beanstalkd client
 

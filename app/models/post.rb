@@ -3,9 +3,10 @@ class Post < ActiveRecord::Base
   
   def yafm
     fm = {
+      "layout"    => "default",
       "title"     => title,
       "permalink" => permalink,
-      "date"      =>  updated_at.strftime("%d %B %Y")         # 12 april 2011
+      "date"      => updated_at.strftime("%d %B %Y")         # 12 april 2011
     }
     yafm = "#{fm.to_yaml}---\n"    
   end
@@ -13,6 +14,7 @@ class Post < ActiveRecord::Base
   # publish status getters
   def preprocessed?;  self.publish_status=="PREPROCESSED" end
   def jkylled?;       self.publish_status=="JKYLLED"      end
+  def copied?;        self.publish_status=="COPIED"       end
   def pushed?;        self.publish_status=="PUSHED"       end
   def unpublished?;   self.publish_status.blank?          end
   def published?;           pushed?                       end
@@ -21,89 +23,106 @@ class Post < ActiveRecord::Base
   # publish status setters
   def preprocessed!;  self.update_attribute(:publish_status, "PREPROCESSED") end
   def jkylled!;       self.update_attribute(:publish_status, "JKYLLED")      end
+  def copied!;        self.update_attribute(:publish_status, "COPIED")       end
   def pushed!;        self.update_attribute(:publish_status, "PUSHED")       end
 
   def do_publish
-    do_preprocessing    unless preprocessed?
-    do_jkylling         unless jkylled?
-    do_pushing          unless pushed?
+    Stalker.enqueue("post.preprocess", :post_id => self.id)   unless preprocessed?
+    Stalker.enqueue("post.jkyll", :post_id => self.id)        unless jkylled?
+    Stalker.enqueue("post.copy",  :post_id => self.id)        unless copied?
+    Stalker.enqueue("post.push",  :post_id => self.id)        unless pushed?
   end
-  
-  def do_preprocessing(background=true)
-    preprocess_it   if background == false
-    Stalker.enqueue("post.preprocess", :post_id => self.id)
-  end
-  
-  def do_jkylling(background=true)
-    jkyll_it        if background == false
-    Stalker.enqueue("post.jkyll", :post_id => self.id)
-  end
-  
-  def do_pushing(background=true) 
-    push_it         if background ==false
-    Stalker.enqueue("post.push", :post_id => self.id)
-  end
+    
+  def preprocess
+    begin
+      username = user.name
+      sites_home = Manjaa::Application.config.sites_path
+      user_home = "#{sites_home}/#{username}"  
+      filename = updated_at.strftime("%Y-%m-%d") + "-" + permalink
+      filepath = "#{user_home}/_posts/#{filename}"
 
-  private
-  
-  def preprocess_it
-    username = user.name
-    sites_home = Manjaa::Application.config.sites_path
-    user_home = "#{sites_home}/#{username}"  
-    filename = permalink
-    filepath = "#{user_home}/_posts/#{filename}"
-
-    File.open(filepath, "w") do |f|
-      f.write self.yafm
-      f.write self.content
-    end
-    self.preprocessed!
+      File.open(filepath, "w") do |f|
+        f.write self.yafm
+        f.write self.content
+      end
+      self.preprocessed!
+    rescue => e
+      p e.message
+      p e.backtrace
+    end      
   end
   
-  def jkyll_it
-    username = user.name
-    sites_home = Manjaa::Application.config.sites_path
-    user_home = "#{sites_home}/#{username}"  
-    source_path = "#{user_home}/_posts"
-    site_path = "#{user_home}/_site"
-    jekyll_command = "jekyll #{source_path} #{site_path}"
-    output = `#{jekyll_command}`
-    raise output unless $?.success?
+  def jkyll
+    begin
+      user_home = user.home_path
+      FileUtils.cd user_home
+    
+      jekyll_command = "jekyll"
+      output = `#{jekyll_command}`
+      raise output unless $?.success?
         
-    self.jkylled!
+      self.jkylled!
+    rescue => e
+      p e.message
+      p e.backtrace
+    end  
   end
   
-  def push_it
-    username = user.name
-    sites_home = Manjaa::Application.config.sites_path
-    user_home = "#{sites_home}/#{username}"  
-    user_site = "#{user_home}/_site"
-    FileUtils.cd user_site
-
-    post_file = permalink    
-    git_add_command = "git add #{post_file}"
-    git_commit_command = "git commit -m \"committing #{post_file} on #{Time.now}\""
-    git_pull_command = "git pull origin master"
-    git_push_command = "git push origin master"
-    git_merge_conflict_command = "git checkout #{post_file} --ours" 
-
-
-    output = `#{git_add_command}`
-    raise output unless $?.success?
+  def copy
+    begin
+      site_path = "#{user.home_path}/_site"
+      push_path = "#{user.home_path}/_push"
     
-    output = `#{git_commit_command}`
-    raise output unless $?.success?
-
-    output = `#{git_pull_command}`
-    raise output unless $?.success?
-
-    output = `#{git_merge_conflict_command}`
-    raise output unless $?.success?
-
-    output = `#{git_push_command}`
-    raise output unless $?.success?
+      post_file = permalink    
+      index_file = "index.html"
     
-    self.published!
+      cp_cmd = "cp #{site_path}/#{post_file} #{push_path}/#{post_file}"
+      output = `#{cp_cmd}`
+      raise output unless $?.success?
+        
+      cp_cmd = "cp #{site_path}/#{index_file} #{_push_path}/#{index_file}"
+      output = `#{cp_cmd}`
+      raise output unless $?.success?  
+    
+      self.copied!
+    rescue => e
+      p e.message
+      p e.backtrace
+    end  
+  end
+  
+  def push
+    begin
+      push_path = "#{user.home_path}/_push"    
+      FileUtils.cd push_path    
+    
+      git_add_command = "git add #{post_file} #{index_file}"
+      git_commit_command = "git commit -m \"committing #{post_file} on #{Time.now}\""
+      git_pull_command = "git pull #{user.remote_repo} master"
+      git_push_command = "git push #{user.remote_repo} master"
+      git_merge_conflict_command = "git checkout #{post_file} #{index_file} --ours" 
+
+
+      output = `#{git_add_command}`
+      raise output unless $?.success?
+    
+      output = `#{git_commit_command}`
+      raise output unless $?.success?
+
+      output = `#{git_pull_command}`
+      raise output unless $?.success?
+
+      output = `#{git_merge_conflict_command}`
+      raise output unless $?.success?
+
+      output = `#{git_push_command}`
+      raise output unless $?.success?
+    
+      self.published!
+    rescue => e
+      p e.message
+      p e.backtrace
+    end    
   end
 end
 
