@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   def home_path
     sites_home = Manjaa::Application.config.sites_path
-    user_home = "#{sites_home}/#{username}"     
+    user_home = "#{sites_home}/#{name}"     
     github_username_identified? ? user_home : nil 
   end
   

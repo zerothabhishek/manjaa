@@ -80,7 +80,7 @@ class Post < ActiveRecord::Base
       output = `#{cp_cmd}`
       raise output unless $?.success?
         
-      cp_cmd = "cp #{site_path}/#{index_file} #{_push_path}/#{index_file}"
+      cp_cmd = "cp #{site_path}/#{index_file} #{push_path}/#{index_file}"
       output = `#{cp_cmd}`
       raise output unless $?.success?  
     
@@ -96,29 +96,35 @@ class Post < ActiveRecord::Base
       push_path = "#{user.home_path}/_push"    
       FileUtils.cd push_path    
     
+      post_file = permalink    
+      index_file = "index.html"
       git_add_command = "git add #{post_file} #{index_file}"
       git_commit_command = "git commit -m \"committing #{post_file} on #{Time.now}\""
       git_pull_command = "git pull #{user.remote_repo} master"
       git_push_command = "git push #{user.remote_repo} master"
       git_merge_conflict_command = "git checkout #{post_file} #{index_file} --ours" 
 
-
+      p "doing #{git_add_command}..."
       output = `#{git_add_command}`
       raise output unless $?.success?
     
+      p "doing #{git_commit_command}..."
       output = `#{git_commit_command}`
       raise output unless $?.success?
 
+      p "doing #{git_pull_command}..."
       output = `#{git_pull_command}`
       raise output unless $?.success?
 
+      p "doing #{git_merge_conflict_command}..."
       output = `#{git_merge_conflict_command}`
       raise output unless $?.success?
 
+      p "doing #{git_push_command}..."
       output = `#{git_push_command}`
       raise output unless $?.success?
     
-      self.published!
+      self.pushed!
     rescue => e
       p e.message
       p e.backtrace
