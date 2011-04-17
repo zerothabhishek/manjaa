@@ -114,7 +114,7 @@ class Post < ActiveRecord::Base
 
       p "doing #{git_pull_command}..."
       output = `#{git_pull_command}`
-      raise output unless $?.success?
+      #raise output unless $?.success?
 
       p "doing #{git_merge_conflict_command}..."
       output = `#{git_merge_conflict_command}`
