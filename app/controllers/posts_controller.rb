@@ -28,6 +28,7 @@ class PostsController < ApplicationController
   def update
     @post = current_user.posts.find params[:id]
     if @post.update_attributes(params[:post])
+      @post.unpublished!
       redirect_to post_path(@post)
     else
       render :action => "edit"
@@ -42,6 +43,7 @@ class PostsController < ApplicationController
   
   def destroy
     @post = current_user.posts.find params[:id]
+    @post.do_remove
     @post.destroy
     redirect_to posts_url
   end

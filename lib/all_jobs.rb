@@ -39,10 +39,20 @@ end
 
 job "post.copy" do |args|
   post = Post.find args["post_id"].to_i
-  post.copy
+  post.copy(args["removing"].true?)
 end
 
 job "post.push" do |args|
   post = Post.find args["post_id"].to_i
-  post.push
+  post.push(args["removing"].true?)
+end
+
+job "post.git_remove" do |args|
+  post = Post.find args["post_id"].to_i
+  post.git_remove
+end
+
+job "post.cleanup" do |args|
+  post = Post.find args["post_id"].to_i
+  post.cleanup
 end

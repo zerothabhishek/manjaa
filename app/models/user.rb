@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
   has_one :github_info
   has_one :setup_status
 
+  attr_accessor :home_path, :posts_dir, :push_dir, :site_dir, :remote_repo
+  
   after_create :create_github_info_and_setup_status
 
   def create_github_info_and_setup_status
@@ -19,6 +21,11 @@ class User < ActiveRecord::Base
     user_home = "#{sites_home}/#{name}"     
     github_username_identified? ? user_home : nil 
   end
+  
+  def posts_dir; File.join(home_path, "_posts"); end
+  def push_dir;  File.join(home_path, "_push");  end
+  def site_dir;  File.join(home_path, "_site");  end
+    
   
   def remote_repo_name
     "#{github_info.github_username}.github.com"
