@@ -5,6 +5,7 @@ gem 'rails', '3.0.5.rc1'
 #gem 'rails', :git => 'git://github.com/rails/rails.git'	
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'mysql2', :require => 'mysql2'
 gem 'bcrypt-ruby'
 gem 'oauth2', '0.1.1'
 gem 'json'
