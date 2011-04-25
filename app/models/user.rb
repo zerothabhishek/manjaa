@@ -74,9 +74,9 @@ class User < ActiveRecord::Base
   end
 
   def do_setup(code)
-    Stalker.enqueue("github.fetch_access_token", :user_id => self.id, :code => code)    if got_code? && !got_access?
-    Stalker.enqueue("github.get_user_info",      :user_id => self.id)   unless github_username_identified?
-    Stalker.enqueue("github.upload_public_key",  :user_id => self.id)   unless public_key_uploaded?
+    Stalker.enqueue("github.fetch-access-token", :user_id => self.id, :code => code)    if got_code? && !got_access?
+    Stalker.enqueue("github.get-user-info",      :user_id => self.id)   unless github_username_identified?
+    Stalker.enqueue("github.upload-public-key",  :user_id => self.id)   unless public_key_uploaded?
     Stalker.enqueue("jekyll.init",               :user_id => self.id)   unless site_initialized?
   end
   
@@ -127,7 +127,7 @@ class User < ActiveRecord::Base
     begin
       access_token = OAuth2::AccessToken.new(new_client, user.github_info.access_token)
 
-      public_key = File.read("/Users/abhishekyadav/.ssh/id_rsa.pub")
+      public_key = File.read File.expand_path "~/.ssh/id_rsa.pub"
       params = {:title => "key from manjaa", :key => public_key }
       access_token.post('/api/v2/json/user/key/add', params)
 

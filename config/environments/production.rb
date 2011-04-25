@@ -46,6 +46,7 @@ Manjaa::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
   # Location of the user sites
-  config.sites_path = File.expand_path("../../../sites", __FILE__)
+  config.sites_path = File.expand_path("#{Rails.root}/public/system/sites")
 end

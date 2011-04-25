@@ -45,7 +45,7 @@ class Post < ActiveRecord::Base
   end
   
   def do_remove  
-    Stalker.enqueue("post.git_remove", :post_id => self.id)
+    Stalker.enqueue("post.git-remove", :post_id => self.id)
     Stalker.enqueue("post.cleanup", :post_id => self.id)
     Stalker.enqueue("post.jkyll",   :post_id => self.id)
     Stalker.enqueue("post.copy",    :post_id => self.id, :removing => true)
