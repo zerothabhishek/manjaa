@@ -1,8 +1,0 @@
-
-production:
-  adapter: mysql2
-  database: <%= "#{application}_production" %>
-  username: <%= "#{user}" %>
-  password: <%= "#{Capistrano::CLI.password_prompt("Enter MySQL database password: ")}" %>
-  encoding: utf8
-  timeout: 5000
