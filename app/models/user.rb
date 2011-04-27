@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
       p "user=#{id}, access_token=#{access_token.token}"
       github_info.update_attribute(:access_token, access_token.token)
     rescue OAuth2::AccessDenied   
-      user.lost_github_access!
+      self.lost_github_access!
     end    
   end
   
@@ -98,10 +98,10 @@ class User < ActiveRecord::Base
       github_username = JSON.parse(data)["user"]["login"]
       p "user=#{id}, github_username=#{github_username}"
 
-      user.github_info.update_attribute(:github_username, github_username)
-      user.github_username_identified!
+      self.github_info.update_attribute(:github_username, github_username)
+      self.github_username_identified!
     rescue OAuth2::AccessDenied
-      user.lost_github_access!
+      self.lost_github_access!
     end
   end
 
@@ -119,7 +119,7 @@ class User < ActiveRecord::Base
 
       site_repo_created!   if repo_exists
     rescue OAuth2::AccessDenied
-      user.lost_github_access!
+      self.lost_github_access!
     end
   end
   
@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
 
       user.public_key_uploaded!    
     rescue OAuth2::AccessDenied
-      user.lost_github_access!
+      self.lost_github_access!
     end
   end
   

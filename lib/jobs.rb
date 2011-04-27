@@ -1,6 +1,3 @@
-require File.expand_path("../../config/environment", __FILE__) 
-require 'fileutils'
-include GithubProcessor
 
 job "jekyll.init" do |args|
   user = User.find args['user_id'].to_i
