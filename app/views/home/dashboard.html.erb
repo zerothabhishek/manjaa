@@ -15,7 +15,8 @@
 <% elsif current_user.setup_incomplete? %>	
 	
 	<% if current_user.got_code? && current_user.got_access? %>
-		Setup in progress <br/>
+		Setup in progress 
+		<%= link_to "finish setup", finish_setup_url %><br/>
 	<% else %>
 		<%= link_to "Allow github access", github_auth_url %>
 	<% end %>

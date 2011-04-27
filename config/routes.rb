@@ -11,6 +11,7 @@ Manjaa::Application.routes.draw do
   
   match '/callback/github' => "home#github_callback", :as => :github_callback
   match '/dashboard' => "home#dashboard", :as => :dashboard
+  match '/finish_setup' => "home#finish_setup", :as => :finish_setup
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

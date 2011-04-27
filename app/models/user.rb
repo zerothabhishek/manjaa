@@ -72,16 +72,10 @@ class User < ActiveRecord::Base
   def setup_complete?
     !setup_incomplete?
   end
-
-  def do_setup(code)
-    Stalker.enqueue("github.fetch-access-token", :user_id => self.id, :code => code)    if got_code? && !got_access?
-    Stalker.enqueue("github.get-user-info",      :user_id => self.id)   unless github_username_identified?
-    Stalker.enqueue("github.upload-public-key",  :user_id => self.id)   unless public_key_uploaded?
-    Stalker.enqueue("jekyll.init",               :user_id => self.id)   unless site_initialized?
-  end
   
-  def setup_github_access(code)
+  def setup_github_access
     begin
+      code = self.github_info.access_code
       access_token = new_client.web_server.get_access_token(code)
       p "user=#{id}, access_token=#{access_token.token}"
       github_info.update_attribute(:access_token, access_token.token)
