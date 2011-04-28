@@ -34,6 +34,9 @@ class HomeController < ApplicationController
     if !current_user.github_username_identified? || force
       Stalker.enqueue("github.get-user-info", :user_id => current_user.id)    
     end    
+    if !current_user.site_repo_created? || force
+      Stalker.enqueue("github.create-repo", :user_id => current_user.id)
+    end    
     if !current_user.public_key_uploaded?  || force
       Stalker.enqueue("github.upload-public-key", :user_id => current_user.id)    
     end    

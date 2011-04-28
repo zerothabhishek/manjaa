@@ -119,13 +119,13 @@ class User < ActiveRecord::Base
   
   def upload_public_key
     begin
-      access_token = OAuth2::AccessToken.new(new_client, user.github_info.access_token)
+      access_token = OAuth2::AccessToken.new(new_client, self.github_info.access_token)
 
-      public_key = File.read File.expand_path "~/.ssh/id_rsa.pub"
+      public_key = File.read File.expand_path "~/.ssh/id_rsa_manjaa.pub"
       params = {:title => "key from manjaa", :key => public_key }
       access_token.post('/api/v2/json/user/key/add', params)
 
-      user.public_key_uploaded!    
+      self.public_key_uploaded!    
     rescue OAuth2::AccessDenied
       self.lost_github_access!
     end
